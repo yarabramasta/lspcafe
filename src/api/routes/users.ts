@@ -1,17 +1,36 @@
 import { Router } from 'express';
 
-import { userRepo } from '@/entities/user';
-import { QueryError } from '@/models/errors';
+import {
+  deleteUser,
+  getUserById,
+  getUsers,
+  updateRole
+} from '@/controllers/users';
+import { UserRole } from '@/entities/user';
+import authorization from '@/middlewares/authorization';
+import roleGuard from '@/middlewares/role_guard';
 
 const router = Router();
-
-router.get('/users', async (req, res, next) => {
-  try {
-    const users = await userRepo.selectAll();
-    res.status(200).json({ users });
-  } catch (e: any) {
-    next(new QueryError(e.message));
-  }
-});
+/**
+ * @api {get} /users Get all users
+ * @roles [admin]
+ */
+router.get('/users', authorization, roleGuard('admin'), getUsers);
+/**
+ * @api {get} /users/:id Get user by id
+ * @roles [cashier, manager, admin]
+ */
+const roles: UserRole[] = ['cashier', 'manager', 'admin'];
+router.get('/users/:id', authorization, roleGuard(...roles), getUserById);
+/**
+ * @api {put} /users/:id/role Update user role
+ * @roles [admin]
+ */
+router.put('/users/:id/role', authorization, roleGuard('admin'), updateRole);
+/**
+ * WARNING: This routes is only for development purposes.
+ * @api {delete} /users/:id/delete Delete user
+ */
+router.delete('/users/:id/delete', deleteUser);
 
 export default router;

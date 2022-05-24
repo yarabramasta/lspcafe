@@ -1,10 +1,10 @@
 import bcrypt from 'bcryptjs';
 import Joi from 'joi';
 
-import { ValidationError } from '@/models/errors';
+import { EntityNotFoundError, ValidationError } from '@/models/errors';
 import db from '@/services/database';
 
-import { UserInput, UserResult, UserRole } from '../user';
+import { User, UserInput, UserResult, UserRole } from '../user';
 
 const schema = Joi.object<UserInput>({
   email: Joi.string().email().required(),
@@ -46,19 +46,27 @@ class UserRepo {
     return res.rows.at(0);
   }
 
-  public async selectByEmail(email: string): Promise<UserResult | undefined> {
-    const q = `SELECT id, email, role FROM users WHERE email = $1`;
-    const res = await db.query<UserResult>(q, [email]);
+  public async selectByEmail(email: string): Promise<User | undefined> {
+    const q = `SELECT * FROM users WHERE email = $1`;
+    const res = await db.query<User>(q, [email]);
     return res.rows.at(0);
   }
 
-  public async updateRole(
-    id: string,
-    role: UserRole
-  ): Promise<UserResult | undefined> {
-    const q = `UPDATE users SET role = $2 WHERE id = $1 RETURNING id, email, role`;
-    const res = await db.query<UserResult>(q, [id, role]);
-    return res.rows.at(0);
+  public async updateRole(id: string, role: UserRole): Promise<void> {
+    const exist = await this.selectById(id);
+    if (!exist) throw new EntityNotFoundError('User not found');
+    const q = `UPDATE users SET role = $2 WHERE id = $1`;
+    await db.query<UserResult>(q, [id, role]);
+  }
+
+  /**
+   * WARNING: This method is only for development purposes.
+   */
+  public async delete(id: string): Promise<void> {
+    const exist = await this.selectById(id);
+    if (!exist) throw new EntityNotFoundError('User not found');
+    const q = `DELETE FROM users WHERE id = $1`;
+    await db.query<UserResult>(q, [id]);
   }
 }
 

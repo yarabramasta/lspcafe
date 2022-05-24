@@ -1,4 +1,4 @@
-import MenuRepo, { schema } from './menu_repo';
+import MenuRepo, { schema, updateSchema } from './menu_repo';
 
 declare module '@/entities/menu' {
   interface Menu {
@@ -16,5 +16,6 @@ declare module '@/entities/menu' {
 
 const menuRepo = new MenuRepo();
 const MenuSchema = schema;
+const UpdateMenuSchema = updateSchema;
 
-export { menuRepo, MenuSchema };
+export { menuRepo, MenuSchema, UpdateMenuSchema };
