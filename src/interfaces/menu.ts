@@ -9,7 +9,7 @@ declare module '@/interfaces/menu' {
 		created_at: string;
 	}
 
-	type MenuInput = Omit<Menu, 'image' | 'created_at'>;
+	type MenuInput = Omit<Menu, 'id' | 'image' | 'created_at'>;
 }
 
 export {};

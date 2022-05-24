@@ -1,5 +1,5 @@
 declare module '@/interfaces/user' {
-	type UserRole = 'kasir' | 'manajer' | 'admin';
+	type UserRole = 'cashier' | 'manager' | 'admin';
 
 	interface User {
 		id: string;

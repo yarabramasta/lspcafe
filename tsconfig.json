@@ -15,6 +15,9 @@
     "outDir": "./dist",
     "baseUrl": "./src",
     "paths": {
+      "@/helpers/*": [
+        "helpers/*"
+      ],
       "@/interfaces/*": [
         "interfaces/*"
       ],

@@ -1,4 +1,4 @@
-import { UserResult } from '@/interfaces/user';
+import { UserResult, UserRole } from '@/interfaces/user';
 
 declare module '@/interfaces/activity' {
 	interface Activity {
@@ -7,6 +7,11 @@ declare module '@/interfaces/activity' {
 		action: string;
 		created_at: string;
 		user?: UserResult;
+	}
+
+	interface ActivityJoinResult extends Omit<Activity, 'user'> {
+		user_email: string;
+		user_role: UserRole;
 	}
 
 	type ActivityInput = Pick<Activity, 'user_id' | 'action'>;
