@@ -13,12 +13,13 @@
     "outDir": "./dist",
     "baseUrl": "./src",
     "paths": {
+      "@/routes/*": ["api/routes/*"],
+      "@/middlewares/*": ["api/middlewares/*"],
       "@/helpers/*": ["helpers/*"],
       "@/interfaces/*": ["interfaces/*"],
       "@/loaders/*": ["loaders/*"],
       "@/models/*": ["models/*"],
       "@/repositories/*": ["repositories/*"],
-      "@/routes/*": ["routes/*"],
       "@/services/*": ["services/*"],
       "@/utils/*": ["utils/*"]
     }
