@@ -1,0 +1,10 @@
+{
+  "prettier.configPath": "/home/yarabramasta/Workspace/nodejs/lspcafe-backend/node_modules/eslint-config-yb/lib/prettier.js",
+  "prettier.ignorePath": ".gitignore",
+  "[javascript]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": false
+    }
+  },
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

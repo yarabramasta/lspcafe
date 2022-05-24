@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": [
+      "esnext"
+    ],
+    "alwaysStrict": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "paths": {
+      "@/interfaces/*": [
+        "interfaces/*"
+      ],
+      "@/loaders/*": [
+        "loaders/*"
+      ],
+      "@/models/*": [
+        "models/*"
+      ],
+      "@/repositories/*": [
+        "repositories/*"
+      ],
+      "@/routes/*": [
+        "routes/*"
+      ],
+      "@/utils/*": [
+        "utils/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/node_modules/*",
+    "**/*.spec.ts"
+  ]
+}
