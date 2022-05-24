@@ -6,7 +6,7 @@ import {
   ActivityResult
 } from '@/interfaces/activity';
 import ValidationError from '@/models/validation_error';
-import db from '@/utils/database';
+import db from '@/services/database';
 
 const schema = Joi.object<ActivityInput>({
   user_id: Joi.number().integer().required(),

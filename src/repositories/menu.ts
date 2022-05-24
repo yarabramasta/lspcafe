@@ -5,7 +5,7 @@ import dynamicFieldUpdate from '@/helpers/dynamic_field_update';
 import { Menu, MenuInput } from '@/interfaces/menu';
 import QueryError from '@/models/query_error';
 import ValidationError from '@/models/validation_error';
-import db from '@/utils/database';
+import db from '@/services/database';
 import logger from '@/utils/logger';
 
 const schema = Joi.object<MenuInput>({

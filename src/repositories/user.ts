@@ -3,7 +3,7 @@ import Joi from 'joi';
 
 import { UserInput, UserResult, UserRole } from '@/interfaces/user';
 import ValidationError from '@/models/validation_error';
-import db from '@/utils/database';
+import db from '@/services/database';
 
 const schema = Joi.object<UserInput>({
 	email: Joi.string().email().required(),

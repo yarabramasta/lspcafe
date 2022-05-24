@@ -1,4 +1,4 @@
-import db from '@/utils/database';
+import db from '@/services/database';
 
 export default async function <D>(id: string, data: D): Promise<void> {
   const field = Object.keys(data)

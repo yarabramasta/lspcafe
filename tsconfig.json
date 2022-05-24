@@ -3,9 +3,7 @@
     "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",
-    "lib": [
-      "esnext"
-    ],
+    "lib": ["esnext"],
     "alwaysStrict": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -15,27 +13,14 @@
     "outDir": "./dist",
     "baseUrl": "./src",
     "paths": {
-      "@/helpers/*": [
-        "helpers/*"
-      ],
-      "@/interfaces/*": [
-        "interfaces/*"
-      ],
-      "@/loaders/*": [
-        "loaders/*"
-      ],
-      "@/models/*": [
-        "models/*"
-      ],
-      "@/repositories/*": [
-        "repositories/*"
-      ],
-      "@/routes/*": [
-        "routes/*"
-      ],
-      "@/utils/*": [
-        "utils/*"
-      ]
+      "@/helpers/*": ["helpers/*"],
+      "@/interfaces/*": ["interfaces/*"],
+      "@/loaders/*": ["loaders/*"],
+      "@/models/*": ["models/*"],
+      "@/repositories/*": ["repositories/*"],
+      "@/routes/*": ["routes/*"],
+      "@/services/*": ["services/*"],
+      "@/utils/*": ["utils/*"]
     }
   },
   "include": [

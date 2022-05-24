@@ -11,6 +11,12 @@ const server = {
 	port: parseInt(process.env.PORT ?? '4000') || 4000
 };
 
+const token = {
+	secret: process.env.TOKEN_SECRET || 'secret',
+	expiresIn: process.env.TOKEN_EXPIRES_IN || '1h',
+	issuer: process.env.TOKEN_ISSUER || 'auth-server'
+};
+
 const database = {
 	host: process.env.DB_HOST || 'localhost',
 	port: parseInt(process.env.DB_PORT ?? '5432') || 5432,
@@ -23,4 +29,4 @@ const isDev = NODE_ENV === 'development';
 const isProd = NODE_ENV === 'production';
 const isTest = NODE_ENV === 'test';
 
-export { server, database, NODE_ENV, ENV_PATH, isDev, isProd, isTest };
+export { server, database, token, NODE_ENV, ENV_PATH, isDev, isProd, isTest };

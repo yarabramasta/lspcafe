@@ -3,10 +3,10 @@ import http from 'http';
 import express from 'express';
 
 import expressLoader from '@/loaders/express';
-import postgresPoolLoader from '@/loaders/postgres_pool';
+import postgresLoader from '@/loaders/postgres';
 
 import { isProd, server } from './config';
-import db from './utils/database';
+import db from './services/database';
 import logger from './utils/logger';
 
 const app = express();
@@ -20,7 +20,7 @@ async function dispose(exit: boolean, code: number) {
 
 (() => {
 	expressLoader(app);
-	postgresPoolLoader(db);
+	postgresLoader(db);
 
 	_server.listen(server.port);
 	_server.on('listening', () => {
