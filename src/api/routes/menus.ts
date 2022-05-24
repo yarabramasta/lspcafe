@@ -36,3 +36,5 @@ router.delete(
   roleGuard('manager'),
   deleteMenu
 );
+
+export default router;

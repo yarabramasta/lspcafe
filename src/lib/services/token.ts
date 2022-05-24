@@ -13,7 +13,7 @@ function createToken(user: UserResult) {
 
 function decodeToken(t: string): Promise<UserResult> {
   return new Promise((resolve, reject) => {
-    jwt.verify(t, token.secret, (err, decoded) => {
+    jwt.verify(t, token.secret, { issuer: token.issuer }, (err, decoded) => {
       if (err) {
         return reject(err);
       }

@@ -17,7 +17,7 @@ declare module '@/entities/activity' {
     user_role: UserRole;
   }
 
-  type ActivityInput = Pick<Activity, 'user_id' | 'action'>;
+  type ActivityInput = Pick<Activity, 'action'>;
   type ActivityResult = Omit<Activity, 'user_id'>;
 }
 

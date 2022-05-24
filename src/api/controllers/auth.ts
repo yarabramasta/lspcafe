@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import { NextFunction, Request, Response } from 'express';
 
 import { UserInput, userRepo } from '@/entities/user';
+import { RequestWithUser } from '@/middlewares/authorization';
 import { QueryError, ValidationError } from '@/models/errors';
 import { createToken } from '@/services/token';
 
@@ -28,12 +29,16 @@ async function authenticate(
     } else {
       return res.status(200).json({ user: exist, token: createToken(exist) });
     }
-  } catch (e) {
+  } catch (e: any) {
     if (e instanceof ValidationError) {
       return next(e);
     }
-    return next(new QueryError('Something went wrong'));
+    return next(new QueryError(e.message));
   }
+}
+
+export function getProfile(req: RequestWithUser, res: Response) {
+  return res.status(200).json({ profile: req.user! });
 }
 
 export { authenticate };

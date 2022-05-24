@@ -8,6 +8,7 @@ import { errorHandler } from '@/middlewares/error_handler';
 import { notFoundHandler } from '@/middlewares/not_found_handler';
 import actRoute from '@/routes/activities';
 import authRoute from '@/routes/auth';
+import menuRoute from '@/routes/menus';
 import userRoute from '@/routes/users';
 
 import { isDev } from '../config';
@@ -16,14 +17,14 @@ export default function (app: express.Application) {
   app.use(express.json({ limit: '100kb' }));
   app.use(express.urlencoded({ extended: true }));
 
-  app.disabled('x-powered-by');
+  app.disable('x-powered-by');
 
   app.use(cors());
   app.use(compression());
 
   isDev && app.use(morgan('dev'));
 
-  const routes: any[] = [userRoute, authRoute, actRoute];
+  const routes: any[] = [userRoute, authRoute, actRoute, menuRoute];
   routes.forEach(route => {
     app.use('/api/v1', asyncHandler(route));
   });

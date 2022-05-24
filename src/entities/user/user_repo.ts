@@ -10,7 +10,7 @@ const schema = Joi.object<UserInput>({
   name: Joi.string().required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
-  role: Joi.string().valid('kasir', 'manajer', 'admin').required()
+  role: Joi.string().valid('cashier', 'manager', 'admin').required()
 });
 
 class UserRepo {
@@ -55,6 +55,10 @@ class UserRepo {
   }
 
   public async updateRole(id: string, role: UserRole): Promise<void> {
+    const { error } = Joi.object({
+      role: Joi.string().valid('cashier', 'manager', 'admin')
+    }).validate({ role });
+    if (error) throw new ValidationError(error.message);
     const exist = await this.selectById(id);
     if (!exist) throw new EntityNotFoundError('User not found');
     const q = `UPDATE users SET role = $2 WHERE id = $1`;
