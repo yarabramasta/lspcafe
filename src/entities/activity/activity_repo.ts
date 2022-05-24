@@ -25,7 +25,8 @@ class ActivityRepo {
   public async selectAll(): Promise<ActivityResult[]> {
     const q = `
       SELECT act.id AS id, act.action AS action, act.created_at AS created_at,
-              usr.id AS user_id, usr.email AS user_email, usr.role AS user_role
+              usr.id AS user_id, user.name AS user_name, usr.email AS user_email,
+              usr.role AS user_role
       FROM activities act
       LEFT JOIN users usr ON act.user_id = usr.id
       GROUP BY usr.id
@@ -42,6 +43,7 @@ class ActivityRepo {
       action: row.action,
       user: {
         id: row.user_id,
+        name: row.user_name,
         email: row.user_email,
         role: row.user_role
       },

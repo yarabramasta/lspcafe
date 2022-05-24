@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { addMenu, deleteMenu, getMenus, updateMenu } from '@/controllers/menu';
+import { addMenu, deleteMenu, getMenus, updateMenu } from '@/controllers/menus';
 import authorization from '@/middlewares/authorization';
 import roleGuard from '@/middlewares/role_guard';
 

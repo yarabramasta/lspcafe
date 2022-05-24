@@ -1,5 +1,4 @@
-import { Menu } from '../menu';
-import { UserResult } from '../user';
+import { TransactionMenu } from '../menu';
 
 declare module '@/entities/transaction' {
   interface Transaction {
@@ -10,7 +9,6 @@ declare module '@/entities/transaction' {
     qty_total: number;
     total_payment: number;
     created_at: string;
-    user?: UserResult;
     items: TransactionItemResult[];
   }
 
@@ -25,18 +23,27 @@ declare module '@/entities/transaction' {
     id: string;
     transaction_id: string;
     menu_id: string;
+    user_id: string;
     qty: number;
-    menu?: Menu;
+    menu?: TransactionMenu;
+  }
+
+  interface TransactionItemJoinResult
+    extends Omit<TransactionItem, 'menu' | 'transaction_id' | 'user_id'> {
+    menu_id: string;
+    menu_image: string;
+    menu_name: string;
+    menu_price: number;
   }
 
   type TransactionItemInput = Pick<
     TransactionItem,
-    'transaction_id' | 'menu_id'
+    'transaction_id' | 'menu_id' | 'qty' | 'user_id'
   >;
 
   type TransactionItemResult = Omit<
     TransactionItem,
-    'transaction_id' | 'menu_id'
+    'transaction_id' | 'menu_id' | 'user_id'
   >;
 }
 

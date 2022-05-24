@@ -7,6 +7,7 @@ import db from '@/services/database';
 import { User, UserInput, UserResult, UserRole } from '../user';
 
 const schema = Joi.object<UserInput>({
+  name: Joi.string().required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
   role: Joi.string().valid('kasir', 'manajer', 'admin').required()
@@ -21,27 +22,28 @@ class UserRepo {
     const password = await bcrypt.hash(user.password, salt);
 
     const q = `
-      INSERT INTO users (email, password, role)
-      VALUES ($1, $2, $3)
-      RETURNING id, email, role
+      INSERT INTO users (email, password, role, name)
+      VALUES ($1, $2, $3, $4)
+      RETURNING id, name, email, role
     `;
 
     const result = await db.query<UserResult>(q, [
       user.email,
       password,
-      user.role
+      user.role,
+      user.name
     ]);
     return result.rows[0];
   }
 
   public async selectAll(): Promise<UserResult[]> {
-    const q = `SELECT id, email, role FROM users ORDER BY email ASC`;
+    const q = `SELECT id, name, email, role FROM users ORDER BY email ASC`;
     const res = await db.query<UserResult>(q);
     return res.rows;
   }
 
   public async selectById(id: string): Promise<UserResult | undefined> {
-    const q = `SELECT id, email, role FROM users WHERE id = $1`;
+    const q = `SELECT id, name, email, role FROM users WHERE id = $1`;
     const res = await db.query<UserResult>(q, [id]);
     return res.rows.at(0);
   }

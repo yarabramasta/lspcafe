@@ -12,6 +12,7 @@ declare module '@/entities/activity' {
   }
 
   interface ActivityJoinResult extends Omit<Activity, 'user'> {
+    user_name: string;
     user_email: string;
     user_role: UserRole;
   }

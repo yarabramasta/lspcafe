@@ -7,51 +7,30 @@ import db from '@/services/database';
 import logger from '@/utils/logger';
 
 import { isDev } from '../../config';
-import { Menu, MenuInput } from '../menu';
+import { Menu, MenuInput, MenuType } from '../menu';
 
+const menuType: MenuType[] = ['makanan', 'minuman'];
 const dummyImages = [
   'http://dummyimage.com/496x389.png/5fa2dd/ffffff',
   'http://dummyimage.com/366x500.png/dddddd/000000',
   'http://dummyimage.com/482x487.png/dddddd/000000',
   'http://dummyimage.com/457x397.png/dddddd/000000',
   'http://dummyimage.com/509x507.png/dddddd/000000',
-  'http://dummyimage.com/496x497.png/ff4444/ffffff',
-  'http://dummyimage.com/365x427.png/5fa2dd/ffffff',
-  'http://dummyimage.com/462x452.png/5fa2dd/ffffff',
-  'http://dummyimage.com/425x466.png/5fa2dd/ffffff',
-  'http://dummyimage.com/378x414.png/dddddd/000000',
-  'http://dummyimage.com/429x464.png/ff4444/ffffff',
-  'http://dummyimage.com/367x442.png/5fa2dd/ffffff',
-  'http://dummyimage.com/497x387.png/5fa2dd/ffffff',
-  'http://dummyimage.com/464x370.png/dddddd/000000',
-  'http://dummyimage.com/486x427.png/ff4444/ffffff',
-  'http://dummyimage.com/452x409.png/dddddd/000000',
-  'http://dummyimage.com/481x381.png/cc0000/ffffff',
-  'http://dummyimage.com/472x481.png/dddddd/000000',
-  'http://dummyimage.com/403x480.png/ff4444/ffffff',
-  'http://dummyimage.com/377x442.png/dddddd/000000',
-  'http://dummyimage.com/421x365.png/ff4444/ffffff',
-  'http://dummyimage.com/502x415.png/5fa2dd/ffffff',
-  'http://dummyimage.com/360x485.png/dddddd/000000',
-  'http://dummyimage.com/512x361.png/ff4444/ffffff',
-  'http://dummyimage.com/477x411.png/cc0000/ffffff',
-  'http://dummyimage.com/475x404.png/5fa2dd/ffffff',
-  'http://dummyimage.com/509x438.png/5fa2dd/ffffff',
-  'http://dummyimage.com/473x457.png/dddddd/000000',
-  'http://dummyimage.com/429x511.png/cc0000/ffffff',
-  'http://dummyimage.com/507x454.png/cc0000/ffffff'
+  'http://dummyimage.com/496x497.png/ff4444/ffffff'
 ];
 
 const schema = Joi.object<MenuInput>({
   name: Joi.string().required(),
   description: Joi.string().required(),
   price: Joi.number().required(),
-  stock: Joi.number().integer().required()
+  stock: Joi.number().integer().required(),
+  menu_type: Joi.string().valid('makanan', 'minuman').required()
 });
 
 const updateSchema = Joi.object<Partial<MenuInput>>({
   name: Joi.string(),
   description: Joi.string(),
+  menu_type: Joi.string().valid('makanan', 'minuman').required(),
   price: Joi.number(),
   stock: Joi.number().integer()
 });
@@ -67,8 +46,9 @@ class MenuRepo {
         const menu = {
           name: faker.commerce.productName(),
           description: faker.lorem.paragraphs(2),
+          menu_type: menuType[Math.floor(Math.random() * menuType.length)],
           price: Math.floor(Math.random() * (50000 - 10000) + 10000),
-          stock: parseInt(faker.random.numeric(2))
+          stock: parseInt(faker.random.numeric(1))
         };
         menus.push(menu);
       }
@@ -92,8 +72,8 @@ class MenuRepo {
     const image = dummyImages[Math.floor(Math.random() * dummyImages.length)];
 
     const q = `
-      INSERT INTO menus (name, description, price, stock, image)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO menus (name, description, price, stock, image, menu_type)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *
     `;
     const res = await db.query<Menu>(q, [
@@ -101,7 +81,8 @@ class MenuRepo {
       menu.description,
       menu.price,
       menu.stock,
-      image
+      image,
+      menu.menu_type
     ]);
     return res.rows[0];
   }

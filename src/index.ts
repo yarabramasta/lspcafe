@@ -35,8 +35,8 @@ process.on('uncaughtException', e => {
   dispose(isProd, 1);
 });
 
-process.on('unhandledRejection', (r, _p) => {
-  logger.warn(r);
+process.on('unhandledRejection', (r: any, p: any) => {
+  logger.warn(r, p);
 });
 
 process.on('SIGTERM', () => dispose(true, 0));
