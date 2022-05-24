@@ -2,11 +2,11 @@ import { faker } from '@faker-js/faker';
 import Joi from 'joi';
 
 import dynamicFieldUpdate from '@/helpers/dynamic_field_update';
-import { Menu, MenuInput } from '@/interfaces/menu';
-import QueryError from '@/models/query_error';
-import ValidationError from '@/models/validation_error';
+import { QueryError, ValidationError } from '@/models/errors';
 import db from '@/services/database';
 import logger from '@/utils/logger';
+
+import { Menu, MenuInput } from '../menu';
 
 const schema = Joi.object<MenuInput>({
   name: Joi.string().required(),
@@ -78,6 +78,5 @@ class MenuRepo {
   }
 }
 
-export const menuRepo = new MenuRepo();
-export { schema as MenuSchema };
+export { schema };
 export default MenuRepo;

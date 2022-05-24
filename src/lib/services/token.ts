@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
 
-import { UserResult } from '@/interfaces/user';
+import { UserResult } from '@/entities/user';
 
-import { token } from '../config';
+import { token } from '../../config';
 
 function createToken(user: UserResult) {
   return jwt.sign(user, token.secret, {

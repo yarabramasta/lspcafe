@@ -15,13 +15,12 @@
     "paths": {
       "@/routes/*": ["api/routes/*"],
       "@/middlewares/*": ["api/middlewares/*"],
-      "@/helpers/*": ["helpers/*"],
-      "@/interfaces/*": ["interfaces/*"],
+      "@/entities/*": ["entities/*"],
+      "@/helpers/*": ["lib/helpers/*"],
+      "@/services/*": ["lib/services/*"],
+      "@/utils/*": ["lib/utils/*"],
       "@/loaders/*": ["loaders/*"],
-      "@/models/*": ["models/*"],
-      "@/repositories/*": ["repositories/*"],
-      "@/services/*": ["services/*"],
-      "@/utils/*": ["utils/*"]
+      "@/models/*": ["models/*"]
     }
   },
   "include": [

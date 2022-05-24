@@ -6,8 +6,8 @@ import expressLoader from '@/loaders/express';
 import postgresLoader from '@/loaders/postgres';
 
 import { isProd, server } from './config';
-import db from './services/database';
-import logger from './utils/logger';
+import db from './lib/services/database';
+import logger from './lib/utils/logger';
 
 const app = express();
 const _server = http.createServer(app);

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
-import QueryError from '@/models/query_error';
-import { userRepo } from '@/repositories/user';
+import { userRepo } from '@/entities/user';
+import { QueryError } from '@/models/errors';
 
 const router = Router();
 

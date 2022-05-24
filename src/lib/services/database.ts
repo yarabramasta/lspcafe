@@ -3,7 +3,7 @@ import pg from 'pg';
 
 import logger from '@/utils/logger';
 
-import { database } from '../config';
+import { database } from '../../config';
 
 const db = new pg.Client({
   user: database.user,

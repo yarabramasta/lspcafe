@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
-import HttpError from '@/models/http_error';
+import { HttpError } from '@/models/errors';
 import logger from '@/utils/logger';
 
 import { isDev } from '../../config';

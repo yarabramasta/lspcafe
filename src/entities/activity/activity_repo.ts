@@ -1,12 +1,9 @@
 import Joi from 'joi';
 
-import {
-  ActivityInput,
-  ActivityJoinResult,
-  ActivityResult
-} from '@/interfaces/activity';
-import ValidationError from '@/models/validation_error';
+import { ValidationError } from '@/models/errors';
 import db from '@/services/database';
+
+import { ActivityInput, ActivityJoinResult, ActivityResult } from '../activity';
 
 const schema = Joi.object<ActivityInput>({
   user_id: Joi.number().integer().required(),
@@ -53,4 +50,5 @@ class ActivityRepo {
   }
 }
 
+export { schema };
 export default ActivityRepo;
