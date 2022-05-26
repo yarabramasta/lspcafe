@@ -23,13 +23,13 @@ router.get('/users', authorization, roleGuard('admin'), getUsers);
 const roles: UserRole[] = ['cashier', 'manager', 'admin'];
 router.get('/users/:id', authorization, roleGuard(...roles), getUserById);
 /**
- * @api {put} /users/:id/role Update user role
+ * @api {put} /api/v1/users/:id/role Update user role
  * @roles [admin]
  */
 router.put('/users/:id/role', authorization, roleGuard('admin'), updateRole);
 /**
  * WARNING: This routes is only for development purposes.
- * @api {delete} /users/:id/delete Delete user
+ * @api {delete} /api/v1/users/:id/delete Delete user
  */
 router.delete('/users/:id/delete', deleteUser);
 

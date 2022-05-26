@@ -6,11 +6,11 @@ import authorization from '@/middlewares/authorization';
 const router = Router();
 
 /**
- * @api {post} /auth Authenticate
+ * @api {post} /api/v1/auth Authenticate
  */
 router.post('/auth', authenticate);
 /**
- * @api {get} /auth/profile Get profile of current signed user
+ * @api {get} /api/v1/auth/profile Get profile of current signed user
  */
 router.get('/auth/profile', authorization, getProfile);
 

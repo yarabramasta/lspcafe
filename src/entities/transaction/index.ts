@@ -1,5 +1,10 @@
 import { TransactionMenu } from '../menu';
 
+import TransactionRepo, {
+  itemSchema,
+  transactionSchema
+} from './transaction_repo';
+
 declare module '@/entities/transaction' {
   interface Transaction {
     id: string;
@@ -36,10 +41,7 @@ declare module '@/entities/transaction' {
     menu_price: number;
   }
 
-  type TransactionItemInput = Pick<
-    TransactionItem,
-    'transaction_id' | 'menu_id' | 'qty' | 'user_id'
-  >;
+  type TransactionItemInput = Pick<TransactionItem, 'menu_id' | 'qty'>;
 
   type TransactionItemResult = Omit<
     TransactionItem,
@@ -47,4 +49,8 @@ declare module '@/entities/transaction' {
   >;
 }
 
-export {};
+const trxRepo = new TransactionRepo();
+const TransactionSchema = transactionSchema;
+const ItemSchema = itemSchema;
+
+export { trxRepo, TransactionSchema, ItemSchema };

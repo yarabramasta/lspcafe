@@ -9,6 +9,7 @@ import { notFoundHandler } from '@/middlewares/not_found_handler';
 import actRoute from '@/routes/activities';
 import authRoute from '@/routes/auth';
 import menuRoute from '@/routes/menus';
+import transactionRoute from '@/routes/transactions';
 import userRoute from '@/routes/users';
 
 import { isDev } from '../config';
@@ -24,7 +25,13 @@ export default function (app: express.Application) {
 
   isDev && app.use(morgan('dev'));
 
-  const routes: any[] = [userRoute, authRoute, actRoute, menuRoute];
+  const routes: any[] = [
+    userRoute,
+    authRoute,
+    actRoute,
+    menuRoute,
+    transactionRoute
+  ];
   routes.forEach(route => {
     app.use('/api/v1', asyncHandler(route));
   });

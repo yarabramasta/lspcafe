@@ -7,17 +7,17 @@ import roleGuard from '@/middlewares/role_guard';
 const router = Router();
 
 /**
- * @api {get} /api/menus Get all menus
+ * @api {get} /api/v1/menus Get all menus
  * @roles [cashier, manager]
  */
 router.get('/menus', authorization, roleGuard('cashier', 'manager'), getMenus);
 /**
- * @api {post} /api/menus Add menu
+ * @api {post} /api/v1/menus Add menu
  * @roles [manager]
  */
 router.post('/menus', authorization, roleGuard('manager'), addMenu);
 /**
- * @api {put} /api/menus/:id Update menu
+ * @api {put} /api/v1/menus/:id Update menu
  * @roles [manager]
  */
 router.put(
@@ -27,7 +27,7 @@ router.put(
   updateMenu
 );
 /**
- * @api {delete} /api/menus/:id Delete menu
+ * @api {delete} /api/v1/menus/:id Delete menu
  * @roles [manager]
  */
 router.delete(

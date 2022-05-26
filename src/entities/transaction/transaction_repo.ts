@@ -18,26 +18,20 @@ const transactionSchema = Joi.object<TransactionInput>({
 });
 
 const itemSchema = Joi.object<TransactionItemInput>({
-  transaction_id: Joi.string().required(),
   menu_id: Joi.string().required(),
   qty: Joi.number().integer().required()
 });
 
 class TransactionRepo {
-  public async insertItem(item: TransactionItemInput) {
+  public async insertItem(user_id: string, item: TransactionItemInput) {
     const { error } = itemSchema.validate(item);
     if (error) throw new ValidationError(error.message);
 
     const q = `
-      INSERT INTO transaction_items (transaction_id, menu_id, qty, user_id)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO transaction_items (menu_id, qty, user_id)
+      VALUES ($1, $2, $3)
     `;
-    await db.query(q, [
-      item.transaction_id,
-      item.menu_id,
-      item.qty,
-      item.user_id
-    ]);
+    await db.query(q, [item.menu_id, item.qty, user_id]);
   }
 
   public async insertTransaction(trx: TransactionInput) {
@@ -53,7 +47,7 @@ class TransactionRepo {
   public async selectTransactionsByUserId(
     user_id: string
   ): Promise<TransactionResult[]> {
-    const items = await this.itemInCart(user_id);
+    const items = await this.selectItemInCart(user_id);
     const q = `
       SELECT id, transaction_code, table_code, qty_total,
               total_payment, created_at
@@ -75,13 +69,13 @@ class TransactionRepo {
     ]);
     let items: any[] = [];
     res.rows.forEach(async trx => {
-      const _items = await this.itemInCart(trx.user_id);
+      const _items = await this.selectItemInCart(trx.user_id);
       items = [...items, ..._items];
     });
     return res.rows.map(trx => ({ ...trx, items }));
   }
 
-  public async itemInCart(user_id: string) {
+  public async selectItemInCart(user_id: string) {
     const q = `
       SELECT ti.id AS id, ti.qty AS qty,
               m.id AS menu_id, m.name AS menu_name,
@@ -89,7 +83,8 @@ class TransactionRepo {
       FROM transaction_items AS ti
       LEFT JOIN menus AS m ON ti.menu_id = m.id
       WHERE ti.user_id = $1
-      GROUP BY m.id
+      GROUP BY m.id, ti.id
+      ORDER BY m.name ASC
     `;
     const items = await db.query<TransactionItemJoinResult>(q, [user_id]);
     return items.rows.map(this._itemToJson);
@@ -102,6 +97,18 @@ class TransactionRepo {
       WHERE id = $1
     `;
     await db.query(q, [id, qty]);
+  }
+
+  public async updateItemTransactionId(
+    item_id: string,
+    transaction_id: string
+  ) {
+    const q = `
+      UPDATE transaction_items
+      SET transaction_id = $2
+      WHERE id = $1
+    `;
+    await db.query(q, [item_id, transaction_id]);
   }
 
   private _itemToJson(item: TransactionItemJoinResult): TransactionItemResult {

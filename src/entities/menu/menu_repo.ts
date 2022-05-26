@@ -10,14 +10,6 @@ import { isDev } from '../../config';
 import { Menu, MenuInput, MenuType } from '../menu';
 
 const menuType: MenuType[] = ['makanan', 'minuman'];
-const dummyImages = [
-  'http://dummyimage.com/496x389.png/5fa2dd/ffffff',
-  'http://dummyimage.com/366x500.png/dddddd/000000',
-  'http://dummyimage.com/482x487.png/dddddd/000000',
-  'http://dummyimage.com/457x397.png/dddddd/000000',
-  'http://dummyimage.com/509x507.png/dddddd/000000',
-  'http://dummyimage.com/496x497.png/ff4444/ffffff'
-];
 
 const schema = Joi.object<MenuInput>({
   name: Joi.string().required(),
@@ -30,7 +22,7 @@ const schema = Joi.object<MenuInput>({
 const updateSchema = Joi.object<Partial<MenuInput>>({
   name: Joi.string(),
   description: Joi.string(),
-  menu_type: Joi.string().valid('makanan', 'minuman').required(),
+  menu_type: Joi.string().valid('makanan', 'minuman'),
   price: Joi.number(),
   stock: Joi.number().integer()
 });
@@ -69,8 +61,6 @@ class MenuRepo {
     const { error } = schema.validate(menu);
     if (error) throw new ValidationError(error.message);
 
-    const image = dummyImages[Math.floor(Math.random() * dummyImages.length)];
-
     const q = `
       INSERT INTO menus (name, description, price, stock, image, menu_type)
       VALUES ($1, $2, $3, $4, $5, $6)
@@ -81,16 +71,22 @@ class MenuRepo {
       menu.description,
       menu.price,
       menu.stock,
-      image,
+      faker.image.food(400, 400, true),
       menu.menu_type
     ]);
     return res.rows[0];
   }
 
   public async selectAll(): Promise<Menu[]> {
-    const q = `SELECT * FROM menus ORDER BY created_at DESC`;
+    const q = `SELECT * FROM menus WHERE stock > 0 ORDER BY created_at DESC `;
     const res = await db.query<Menu>(q);
     return res.rows;
+  }
+
+  public async selectById(id: string): Promise<Menu | undefined> {
+    const q = `SELECT * FROM menus WHERE id = $1`;
+    const res = await db.query<Menu>(q, [id]);
+    return res.rows.at(0);
   }
 
   public async update(id: string, data: Partial<MenuInput>): Promise<void> {
