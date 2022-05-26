@@ -19,6 +19,10 @@ export default function (app: express.Application) {
   app.use(express.urlencoded({ extended: true }));
 
   app.disable('x-powered-by');
+  app.use(express.static(process.cwd() + '/public'));
+  app.get('/', (req, res) =>
+    res.sendFile(`${process.cwd()}/public/index.html`)
+  );
 
   app.use(cors());
   app.use(compression());
