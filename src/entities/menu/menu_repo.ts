@@ -88,7 +88,7 @@ class MenuRepo {
   }
 
   public async selectAll(): Promise<Menu[]> {
-    const q = `SELECT * FROM menus`;
+    const q = `SELECT * FROM menus ORDER BY created_at DESC`;
     const res = await db.query<Menu>(q);
     return res.rows;
   }

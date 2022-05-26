@@ -2,7 +2,7 @@ import db from '@/services/database';
 
 export default async function <D>(id: string, data: D): Promise<void> {
   const field = Object.keys(data)
-    .map((key, i) => `${key} = $${key.at(i + 1)}`)
+    .map((key, i) => `${key} = $${i + 1}`)
     .join(', ');
 
   const q = `

@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "serve": "concurrently \"yarn dev\" \"lt --port 4000 --subdomain lspcafe\"",
     "build": "rimraf dist && tsc",
     "dev": "cross-env NODE_ENV=development nodemon --exec ts-node -r tsconfig-paths/register src/index.ts --watch src",
     "start": "cross-env NODE_ENV=production node -r ./path-resolver.js dist/index.js",
@@ -38,6 +39,7 @@
     "@types/morgan": "^1.9.3",
     "@types/node": "^17.0.35",
     "@types/pg": "^8.6.5",
+    "concurrently": "^7.2.1",
     "eslint": "^8.16.0",
     "eslint-config-yb": "^1.1.0",
     "jest": "^28.1.0",
