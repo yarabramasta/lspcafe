@@ -1,5 +1,6 @@
 import Joi from 'joi';
 
+import { menuRepo } from '@/entities/menu';
 import {
   Transaction,
   TransactionInput,
@@ -8,7 +9,11 @@ import {
   TransactionItemResult,
   TransactionResult
 } from '@/entities/transaction';
-import { ValidationError } from '@/models/errors';
+import {
+  EntityNotFoundError,
+  HttpError,
+  ValidationError
+} from '@/models/errors';
 import db from '@/services/database';
 
 const transactionSchema = Joi.object<TransactionInput>({
@@ -91,12 +96,16 @@ class TransactionRepo {
     return items.rows.map(this._itemToJson);
   }
 
-  public async updateItemQty(id: string, qty: number) {
+  public async updateItemQty(id: string, menu_id: string, qty: number) {
+    const item = await menuRepo.selectById(menu_id);
+    if (!item) throw new EntityNotFoundError('Menu not found');
+    if (item.stock < qty) throw new HttpError(400, 'Stock is not enough');
+    if (!item) throw new EntityNotFoundError('Item not found');
     const q = `
-      UPDATE transaction_items
-      SET qty = $2
-      WHERE id = $1
-    `;
+        UPDATE transaction_items
+        SET qty = $2
+        WHERE id = $1
+      `;
     await db.query(q, [id, qty]);
   }
 
@@ -110,6 +119,14 @@ class TransactionRepo {
       WHERE id = $1
     `;
     await db.query(q, [item_id, transaction_id]);
+  }
+
+  public async deleteItem(id: string) {
+    const q = `
+      DELETE FROM transaction_items
+      WHERE id = $1
+    `;
+    await db.query(q, [id]);
   }
 
   private _itemToJson(item: TransactionItemJoinResult): TransactionItemResult {

@@ -1,6 +1,11 @@
 import { Router } from 'express';
 
-import { addItemToCart, getItemsInCart } from '@/controllers/transactions';
+import {
+  addItemToCart,
+  deleteItem,
+  getItemsInCart,
+  updateQty
+} from '@/controllers/transactions';
 import authorization from '@/middlewares/authorization';
 import roleGuard from '@/middlewares/role_guard';
 
@@ -16,5 +21,27 @@ router.get('/cart', authorization, roleGuard('cashier'), getItemsInCart);
  * @roles [cashier]
  */
 router.post('/cart', authorization, roleGuard('cashier'), addItemToCart);
+
+/**
+ * @api {put} /api/v1/cart/item/:id/update Update quantity of menu in cart
+ * @roles [cashier]
+ */
+router.put(
+  '/cart/item/:id/update',
+  authorization,
+  roleGuard('cashier'),
+  updateQty
+);
+
+/**
+ * @api {delete} /api/v1/cart/item/:id/delete Delete menu from cart
+ * @roles [cashier]
+ */
+router.delete(
+  '/cart/item/:id/delete',
+  authorization,
+  roleGuard('cashier'),
+  deleteItem
+);
 
 export default router;
