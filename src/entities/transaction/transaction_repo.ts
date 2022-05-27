@@ -9,17 +9,12 @@ import {
   TransactionItemResult,
   TransactionResult
 } from '@/entities/transaction';
-import {
-  EntityNotFoundError,
-  HttpError,
-  ValidationError
-} from '@/models/errors';
+import { EntityNotFoundError, ValidationError } from '@/models/errors';
 import db from '@/services/database';
 
 const transactionSchema = Joi.object<TransactionInput>({
   qty_total: Joi.number().required(),
-  total_payment: Joi.number().required(),
-  user_id: Joi.string().required()
+  total_payment: Joi.number().required()
 });
 
 const itemSchema = Joi.object<TransactionItemInput>({
@@ -39,14 +34,14 @@ class TransactionRepo {
     await db.query(q, [item.menu_id, item.qty, user_id]);
   }
 
-  public async insertTransaction(trx: TransactionInput) {
+  public async insertTransaction(user_id: string, trx: TransactionInput) {
     const { error } = transactionSchema.validate(trx);
     if (error) throw new ValidationError(error.message);
     const q = `
       INSERT INTO transactions (qty_total, total_payment, user_id)
       VALUES ($1, $2, $3)
     `;
-    await db.query(q, [trx.qty_total, trx.total_payment, trx.user_id]);
+    await db.query(q, [trx.qty_total, trx.total_payment, user_id]);
   }
 
   public async selectTransactionsByUserId(
@@ -88,7 +83,7 @@ class TransactionRepo {
               m.stock AS menu_stock
       FROM transaction_items AS ti
       LEFT JOIN menus AS m ON ti.menu_id = m.id
-      WHERE ti.user_id = $1
+      WHERE ti.user_id = $1 AND ti.is_checkout = false
       GROUP BY m.id, ti.id
       ORDER BY m.name ASC
     `;
@@ -99,8 +94,6 @@ class TransactionRepo {
   public async updateItemQty(id: string, menu_id: string, qty: number) {
     const item = await menuRepo.selectById(menu_id);
     if (!item) throw new EntityNotFoundError('Menu not found');
-    if (item.stock < qty) throw new HttpError(400, 'Stock is not enough');
-    if (!item) throw new EntityNotFoundError('Item not found');
     const q = `
         UPDATE transaction_items
         SET qty = $2

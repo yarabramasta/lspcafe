@@ -17,10 +17,7 @@ declare module '@/entities/transaction' {
     items: TransactionItemResult[];
   }
 
-  type TransactionInput = Pick<
-    Transaction,
-    'qty_total' | 'total_payment' | 'user_id'
-  >;
+  type TransactionInput = Pick<Transaction, 'qty_total' | 'total_payment'>;
 
   type TransactionResult = Omit<Transaction, 'user_id'>;
 
