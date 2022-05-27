@@ -80,7 +80,7 @@ async function deleteItem(
   req: Request<{ id: string; menu_id: string }>,
   res: Response
 ) {
-  const menu = await menuRepo.selectById(req.body.menu_id);
+  const menu = await menuRepo.selectById(req.params.menu_id);
   if (menu) {
     await trxRepo.deleteItem(req.params.id);
     await menuRepo.update(req.params.menu_id, {
