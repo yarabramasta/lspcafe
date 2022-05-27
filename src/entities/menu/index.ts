@@ -15,7 +15,10 @@ declare module '@/entities/menu' {
   }
 
   type MenuInput = Omit<Menu, 'id' | 'image' | 'created_at'>;
-  type TransactionMenu = Pick<Menu, 'id' | 'name' | 'image' | 'price'>;
+  type TransactionMenu = Pick<
+    Menu,
+    'id' | 'name' | 'image' | 'price' | 'stock'
+  >;
 }
 
 const menuRepo = new MenuRepo();

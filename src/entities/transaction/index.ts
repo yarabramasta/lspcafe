@@ -39,6 +39,7 @@ declare module '@/entities/transaction' {
     menu_image: string;
     menu_name: string;
     menu_price: number;
+    menu_stock: number;
   }
 
   type TransactionItemInput = Pick<TransactionItem, 'menu_id' | 'qty'>;

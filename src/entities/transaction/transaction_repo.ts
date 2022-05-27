@@ -79,7 +79,8 @@ class TransactionRepo {
     const q = `
       SELECT ti.id AS id, ti.qty AS qty,
               m.id AS menu_id, m.name AS menu_name,
-              m.image AS menu_image, m.price AS menu_price
+              m.image AS menu_image, m.price AS menu_price,
+              m.stock AS menu_stock
       FROM transaction_items AS ti
       LEFT JOIN menus AS m ON ti.menu_id = m.id
       WHERE ti.user_id = $1
@@ -119,7 +120,8 @@ class TransactionRepo {
         id: item.menu_id,
         name: item.menu_name,
         image: item.menu_image,
-        price: item.menu_price
+        price: item.menu_price,
+        stock: item.menu_stock
       }
     };
   }
