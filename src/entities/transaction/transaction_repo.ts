@@ -91,6 +91,20 @@ class TransactionRepo {
     return items.rows.map(this._itemToJson);
   }
 
+  public async selectItemById(id: string) {
+    const q = `
+      SELECT ti.id AS id, ti.qty AS qty,
+              m.id AS menu_id, m.name AS menu_name,
+              m.image AS menu_image, m.price AS menu_price,
+              m.stock AS menu_stock
+      FROM transaction_items AS ti
+      LEFT JOIN menus AS m ON ti.menu_id = m.id
+      WHERE ti.id = $1
+    `;
+    const res = await db.query<TransactionItemJoinResult>(q, [id]);
+    return res.rows.map(this._itemToJson)[0];
+  }
+
   public async updateItemQty(id: string, menu_id: string, qty: number) {
     const item = await menuRepo.selectById(menu_id);
     if (!item) throw new EntityNotFoundError('Menu not found');

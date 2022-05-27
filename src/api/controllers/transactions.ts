@@ -55,15 +55,10 @@ async function qtyMin(
   res: Response
 ) {
   const menu = await menuRepo.selectById(req.body.menu_id);
+  const item = await trxRepo.selectItemById(req.params.id);
   if (menu) {
-    await trxRepo.updateItemQty(
-      req.params.id,
-      req.body.menu_id,
-      menu.stock - 1
-    );
-    await menuRepo.update(req.body.menu_id, {
-      stock: menu.stock + 1
-    });
+    await trxRepo.updateItemQty(req.params.id, req.body.menu_id, item.qty - 1);
+    await menuRepo.update(req.body.menu_id, { stock: menu.stock + 1 });
     return res.status(200).json({ message: 'Quantity updated.' });
   }
 }
@@ -73,22 +68,26 @@ async function qtyPlus(
   res: Response
 ) {
   const menu = await menuRepo.selectById(req.body.menu_id);
+  const item = await trxRepo.selectItemById(req.params.id);
   if (menu) {
-    await trxRepo.updateItemQty(
-      req.params.id,
-      req.body.menu_id,
-      menu.stock + 1
-    );
-    await menuRepo.update(req.body.menu_id, {
-      stock: menu.stock - 1
-    });
+    await trxRepo.updateItemQty(req.params.id, req.body.menu_id, item.qty + 1);
+    await menuRepo.update(req.body.menu_id, { stock: menu.stock - 1 });
     return res.status(200).json({ message: 'Quantity updated.' });
   }
 }
 
-async function deleteItem(req: Request<{ id: string }>, res: Response) {
-  await trxRepo.deleteItem(req.params.id);
-  return res.status(200).json({ message: 'Item deleted.' });
+async function deleteItem(
+  req: Request<{ id: string; menu_id: string }>,
+  res: Response
+) {
+  const menu = await menuRepo.selectById(req.body.menu_id);
+  if (menu) {
+    await trxRepo.deleteItem(req.params.id);
+    await menuRepo.update(req.params.menu_id, {
+      stock: menu.stock + 1
+    });
+    return res.status(200).json({ message: 'Item deleted.' });
+  }
 }
 
 export {

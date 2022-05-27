@@ -54,7 +54,7 @@ router.put('/cart/item/:id/plus', authorization, roleGuard('cashier'), qtyPlus);
  * @roles [cashier]
  */
 router.delete(
-  '/cart/item/:id/delete',
+  '/cart/item/:id/:menu_id/delete',
   authorization,
   roleGuard('cashier'),
   deleteItem
