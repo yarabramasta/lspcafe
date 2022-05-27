@@ -13,8 +13,10 @@ async function addTransaction(
   req: RequestWithUser<TransactionInput>,
   res: Response
 ) {
-  await trxRepo.insertTransaction(req.user?.id ?? '', req.body);
-  return res.status(201).json({ message: 'Transaction created.' });
+  const id = await trxRepo.insertTransaction(req.user?.id ?? '', req.body);
+  return res
+    .status(201)
+    .json({ message: 'Transaction created.', transaction_id: id });
 }
 
 async function getTransactions(req: RequestWithUser, res: Response) {
@@ -22,6 +24,17 @@ async function getTransactions(req: RequestWithUser, res: Response) {
     req.user?.id ?? ''
   );
   return res.status(200).json({ transactions });
+}
+
+async function updateItemTransactionId(
+  req: Request<unknown, unknown, { item_id: string; transaction_id: string }>,
+  res: Response
+) {
+  await trxRepo.updateItemTransactionId(
+    req.body.item_id,
+    req.body.transaction_id
+  );
+  return res.status(200).json({ message: 'Item updated.' });
 }
 
 async function addItemToCart(
@@ -93,6 +106,7 @@ async function deleteItem(
 export {
   addTransaction,
   getTransactions,
+  updateItemTransactionId,
   addItemToCart,
   getItemsInCart,
   qtyMin,

@@ -40,14 +40,16 @@ class TransactionRepo {
     const q = `
       INSERT INTO transactions (qty_total, total_payment, user_id)
       VALUES ($1, $2, $3)
+      RETURNING id
     `;
-    await db.query(q, [trx.qty_total, trx.total_payment, user_id]);
+    const res = await db.query(q, [trx.qty_total, trx.total_payment, user_id]);
+    return res.rows[0].id as string;
   }
 
   public async selectTransactionsByUserId(
     user_id: string
   ): Promise<TransactionResult[]> {
-    const items = await this.selectItemInCart(user_id);
+    const items = await this.selectItemInCart(user_id, true);
     const q = `
       SELECT id, transaction_code, table_code, qty_total,
               total_payment, created_at
@@ -75,7 +77,7 @@ class TransactionRepo {
     return res.rows.map(trx => ({ ...trx, items }));
   }
 
-  public async selectItemInCart(user_id: string) {
+  public async selectItemInCart(user_id: string, isCheckout = false) {
     const q = `
       SELECT ti.id AS id, ti.qty AS qty,
               m.id AS menu_id, m.name AS menu_name,
@@ -83,11 +85,14 @@ class TransactionRepo {
               m.stock AS menu_stock
       FROM transaction_items AS ti
       LEFT JOIN menus AS m ON ti.menu_id = m.id
-      WHERE ti.user_id = $1 AND ti.is_checkout = false
+      WHERE ti.user_id = $1 AND ti.is_checkout = $2
       GROUP BY m.id, ti.id
       ORDER BY m.name ASC
     `;
-    const items = await db.query<TransactionItemJoinResult>(q, [user_id]);
+    const items = await db.query<TransactionItemJoinResult>(q, [
+      user_id,
+      isCheckout
+    ]);
     return items.rows.map(this._itemToJson);
   }
 
@@ -120,6 +125,12 @@ class TransactionRepo {
     item_id: string,
     transaction_id: string
   ) {
+    const qu = `
+      UPDATE transaction_items
+      SET is_checkout = true, transaction_id = $2
+      WHERE item_id = $1
+    `;
+    await db.query(qu, [item_id, transaction_id]);
     const q = `
       UPDATE transaction_items
       SET transaction_id = $2

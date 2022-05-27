@@ -7,7 +7,8 @@ import {
   getItemsInCart,
   getTransactions,
   qtyMin,
-  qtyPlus
+  qtyPlus,
+  updateItemTransactionId
 } from '@/controllers/transactions';
 import authorization from '@/middlewares/authorization';
 import roleGuard from '@/middlewares/role_guard';
@@ -29,6 +30,16 @@ router.get(
  * @roles [cashier]
  */
 router.post('/trx', authorization, roleGuard('cashier'), addTransaction);
+/**
+ * @api {put} /api/v1/trx/item/update Update item transaction id
+ * @roles [cashier]
+ */
+router.put(
+  '/trx/item/update',
+  authorization,
+  roleGuard('cashier'),
+  updateItemTransactionId
+);
 /**
  * @api {get} /api/v1/cart Get all items in cart
  * @roles [cashier]
