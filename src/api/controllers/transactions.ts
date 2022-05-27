@@ -43,7 +43,7 @@ async function updateQty(
   await trxRepo.updateItemQty(req.params.id, req.body.menu_id, req.body.qty);
   const menu = await menuRepo.selectById(req.body.menu_id);
   if (menu) {
-    if (req.body.type === 'plus') {
+    if (req.body.type === 'min') {
       await menuRepo.update(req.body.menu_id, {
         stock: menu.stock + req.body.qty
       });
