@@ -128,7 +128,7 @@ class TransactionRepo {
     const qu = `
       UPDATE transaction_items
       SET is_checkout = true, transaction_id = $2
-      WHERE item_id = $1
+      WHERE id = $1
     `;
     await db.query(qu, [item_id, transaction_id]);
     const q = `
